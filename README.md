@@ -22,13 +22,16 @@ baz             v2.3.5       cc88abbad18b   2 months ago    317MB
 `
 
 func main() {
+	// Read the all table
+	t := table.ReadAll(text)
+	fmt.Printf("table header len: %d\n", len(t.Header.Cells))
+	
 	// With using Reader
 	r := table.NewReader(strings.NewReader(text))
 	fmt.Printf("table header len: %d\n", len(r.Header().Cells))
-
-	// Read all table
-	t := table.ReadAll(text)
-	fmt.Printf("table header len: %d\n", len(t.Header.Cells))
+	for r.Next() {
+		fmt.Printf("Row: %+v\n", r.Row())
+	}
 }
 ```
 
