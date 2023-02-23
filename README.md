@@ -14,7 +14,7 @@ import (
 	"github.com/anilmisirlioglu/table-parser"
 )
 
-const text = `
+const input = `
 REPOSITORY      TAG          IMAGE ID       CREATED         SIZE
 foo             latest       cf508acd919c   26 hours ago    24.5MB
 bar             latest       382715ecff56   2 months ago    705MB
@@ -23,11 +23,11 @@ baz             v2.3.5       cc88abbad18b   2 months ago    317MB
 
 func main() {
 	// Read the all table
-	t := table.ReadAll(text)
+	t := table.ReadAll(input)
 	fmt.Printf("table header len: %d\n", len(t.Header.Cells))
 	
 	// With using Reader
-	r := table.NewReader(strings.NewReader(text))
+	r := table.NewReader(strings.NewReader(input))
 	fmt.Printf("table header len: %d\n", len(r.Header().Cells))
 	for r.Next() {
 		fmt.Printf("Row: %+v\n", r.Row())
