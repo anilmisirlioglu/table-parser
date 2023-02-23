@@ -1,6 +1,6 @@
 # Table Parser [![Made With Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg?color=007EC6)](http://golang.org)
 
-Easily parse your cool data table in the CLI.
+Easily parse your cool table-style output data.
 
 ## Example
 
