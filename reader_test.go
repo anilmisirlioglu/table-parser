@@ -119,6 +119,31 @@ master-1            control-plane,master       Ubuntu 20.04.1 LTS   5.13.0-39-ge
 			},
 		},
 	},
+	{
+		name: "test empty table",
+		text: `NAME                ROLES                      OS IMAGE             KERNEL-VERSION      CONTAINER RUNTIME`,
+		want: &Table{
+			Header: Header{
+				Text: "NAME                ROLES                      OS IMAGE             KERNEL-VERSION      CONTAINER RUNTIME",
+				Cells: []HeaderCell{
+					{Index: 0, Key: "NAME"},
+					{Index: 20, Key: "ROLES"},
+					{Index: 47, Key: "OS IMAGE"},
+					{Index: 68, Key: "KERNEL-VERSION"},
+					{Index: 88, Key: "CONTAINER RUNTIME"},
+				},
+			},
+			Rows: make([]Row, 0),
+		},
+	},
+	{
+		name: "test empty input",
+		text: "",
+		want: &Table{
+			Header: Header{},
+			Rows:   make([]Row, 0),
+		},
+	},
 }
 
 func TestNewReader(t *testing.T) {
@@ -128,8 +153,8 @@ func TestNewReader(t *testing.T) {
 	}
 
 	r = NewReader(strings.NewReader("     "))
-	if r != nil {
-		t.Errorf("reader must be nil")
+	if r == nil {
+		t.Errorf("reader must not be nil")
 	}
 }
 
@@ -138,14 +163,14 @@ func TestReader(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := NewReader(strings.NewReader(tt.text))
 
-			var rows []Row
+			rows := make([]Row, 0)
 			for r.Next() {
 				rows = append(rows, r.Row())
 			}
 
 			got := &Table{Header: r.Header(), Rows: rows}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewReader() failed\n got:%v \nwant %v", got, tt.want)
+				t.Errorf("NewReader() failed\n got: %v\nwant: %v", got, tt.want)
 			}
 		})
 	}
@@ -154,8 +179,8 @@ func TestReader(t *testing.T) {
 func TestReadAll(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ReadAll(tt.text); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReadAll() failed\n got:%v \nwant %v", got, tt.want)
+			if got := ReadAll(tt.text); !reflect.DeepEqual(*got, *tt.want) {
+				t.Errorf("ReadAll() failed\n got: %v\nwant: %v", got, tt.want)
 			}
 		})
 	}

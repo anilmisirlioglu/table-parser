@@ -21,7 +21,7 @@ func NewReader(rd io.Reader) *Reader {
 	}
 
 	if h == "" {
-		return nil
+		return &Reader{s: s}
 	}
 
 	return &Reader{
@@ -58,13 +58,19 @@ func ReadAll(s string) *Table {
 		}
 	}
 
-	if len(rows) <= 1 {
-		return nil
+	rl := len(rows)
+	if rl <= 1 {
+		t := &Table{Rows: make([]Row, 0)}
+		if rl == 1 {
+			t.Header = parseHeader(rows[0])
+		}
+
+		return t
 	}
 
 	table := &Table{
 		Header: parseHeader(rows[0]),
-		Rows:   make([]Row, 0, len(rows)-1),
+		Rows:   make([]Row, 0, rl-1),
 	}
 
 	for _, row := range rows[1:] {

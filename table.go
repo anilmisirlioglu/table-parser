@@ -25,11 +25,11 @@ type RowCell struct {
 	Relation string
 }
 
-func (t *Table) Row(index int) Row {
+func (t *Table) Row(index int) *Row {
 	if len(t.Rows) > index {
-		return t.Rows[index]
+		return &t.Rows[index]
 	}
-	return Row{}
+	return nil
 }
 
 func (h *Header) append(cell HeaderCell) {
@@ -40,18 +40,18 @@ func (r *Row) append(cell RowCell) {
 	r.Cells = append(r.Cells, cell)
 }
 
-func (r *Row) Cell(index int) RowCell {
+func (r *Row) Cell(index int) *RowCell {
 	if len(r.Cells) > index {
-		return r.Cells[index]
+		return &r.Cells[index]
 	}
-	return RowCell{}
+	return nil
 }
 
-func (r *Row) CellByName(s string) RowCell {
+func (r *Row) CellByName(s string) *RowCell {
 	for _, cell := range r.Cells {
 		if cell.Relation == s {
-			return cell
+			return &cell
 		}
 	}
-	return RowCell{}
+	return nil
 }
